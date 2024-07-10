@@ -12,6 +12,7 @@
 
 //==============================================================================
 #include "Engine/cocotone_VoicevoxEngine.cpp"
+#include "Engine/cocotone_TaskDetails.cpp"
 
 #include "Format/cocotone_AudioQueryConverter.cpp"
 #include "Format/cocotone_ScoreJsonConverter.cpp"

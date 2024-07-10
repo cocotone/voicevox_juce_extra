@@ -4,6 +4,7 @@ namespace cctn
 namespace
 {
 
+//==============================================================================
 juce::String hiraganaToKatakana(const juce::String& input)
 {
     juce::String result;
@@ -182,8 +183,8 @@ std::optional<cctn::VoicevoxEngineLowLevelScore> ScoreJsonConverter::convertToLo
 
     result._phoneme_length_vector = calculatePhonemeLengthVector(consonant_length_vector_optional.value(), result._note_length_vector);
 
-    const auto repeated_phonemes = repeat(result._phonemes, result._phoneme_length_vector);
-    const auto repeated_keys = repeat(result._phoneme_key_vector, result._phoneme_length_vector);
+    const auto repeated_phonemes = cctn::repeat(result._phonemes, result._phoneme_length_vector);
+    const auto repeated_keys = cctn::repeat(result._phoneme_key_vector, result._phoneme_length_vector);
     
     const auto predeicted_f0_vector_optional =
         voicevoxClient.predictSingF0(predict_speaker_id, repeated_phonemes, repeated_keys);
@@ -205,7 +206,7 @@ std::optional<cctn::VoicevoxEngineLowLevelScore> ScoreJsonConverter::convertToLo
 
     result.volumeVector = predicted_volume_vector.value();
 
-    result.phonemeVector = repeat(result._phonemes, result._phoneme_length_vector);
+    result.phonemeVector = cctn::repeat(result._phonemes, result._phoneme_length_vector);
 
     return result;
 }
