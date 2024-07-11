@@ -112,9 +112,9 @@ void HostSyncAudioSourcePlayer::makeAudioSourceResampled()
 //==============================================================================
 double HostSyncAudioSourcePlayer::getTimeLengthInSeconds() const
 {
-    if (memoryAudioSourceOriginal.get() != nullptr)
+    if (memoryAudioSourceOriginal.get() != nullptr && sampleRateAudioSourceOriginal != 0.0)
     {
-        return memoryAudioSourceOriginal->getTotalLength() * sampleRateAudioSourceOriginal;
+        return (double)memoryAudioSourceOriginal->getTotalLength() / sampleRateAudioSourceOriginal;
     }
 
     return 0.0;
