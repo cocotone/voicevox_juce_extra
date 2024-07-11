@@ -20,6 +20,7 @@ public:
 
     //==============================================================================
     void setAudioBufferToPlay(const juce::AudioBuffer<float>& sourceAudioBuffer, double sourceSampleRate);
+    void clearAudioBufferToPlay();
 
     //==============================================================================
     void doResamplingIfNeeded();
@@ -30,6 +31,7 @@ public:
 
 private:
     //==============================================================================
+    // Audio source related.
     juce::AudioBuffer<float> sourceAudioBufferCache;
 
     std::unique_ptr<juce::MemoryAudioSource> memoryAudioSourceOriginal { nullptr };
@@ -38,8 +40,10 @@ private:
     std::unique_ptr<juce::MemoryAudioSource> memoryAudioSourceResampled { nullptr };
     double sampleRateAudioSourceResampled { 0.0 };
     
-    double sampleRateToPlay { 0.0 };
     juce::int64 estimatedNextReadSamplePosition { 0 };
+
+    // PlayerConfig
+    double sampleRateToPlay { 0.0 };
 
     juce::SpinLock mutex;
 

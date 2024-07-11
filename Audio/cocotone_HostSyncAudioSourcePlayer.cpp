@@ -34,10 +34,10 @@ void HostSyncAudioSourcePlayer::processBlockWithPositionInfo(juce::AudioBuffer<f
         return;
     }
 
+    const juce::int64 current_position_in_sampled = positionInfo.getTimeInSamples().orFallback(0.0);
+
     if (positionInfo.getIsPlaying())
     {
-        const juce::int64 current_position_in_sampled = positionInfo.getTimeInSamples().orFallback(0.0);
-
         if (current_position_in_sampled != estimatedNextReadSamplePosition)
         {
             // Apply cross fade.
@@ -82,6 +82,11 @@ void HostSyncAudioSourcePlayer::processBlockWithPositionInfo(juce::AudioBuffer<f
 
         estimatedNextReadSamplePosition = memoryAudioSourceResampled->getNextReadPosition();
     }
+    else
+    {
+        estimatedNextReadSamplePosition = current_position_in_sampled;
+        memoryAudioSourceResampled->setNextReadPosition(current_position_in_sampled);
+    }
 }
 
 //==============================================================================
@@ -95,6 +100,23 @@ void HostSyncAudioSourcePlayer::setAudioBufferToPlay(const juce::AudioBuffer<flo
     sampleRateAudioSourceOriginal = sourceSampleRate;
 
     makeAudioSourceResampled();
+
+    estimatedNextReadSamplePosition = 0.0;
+}
+
+void HostSyncAudioSourcePlayer::clearAudioBufferToPlay()
+{
+    const juce::SpinLock::ScopedLockType lock(mutex);
+
+    memoryAudioSourceOriginal.reset();
+    sampleRateAudioSourceOriginal = 0.0;
+
+    memoryAudioSourceResampled.reset();
+    sampleRateAudioSourceResampled = 0.0;
+
+    estimatedNextReadSamplePosition = 0.0;
+
+    sourceAudioBufferCache.clear();
 }
 
 //==============================================================================
