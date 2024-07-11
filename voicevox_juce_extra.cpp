@@ -10,6 +10,8 @@
 #include "Static/cocotone_StaticMoraMapping.h"
 #include "Static/cocotone_StaticPhonemes.h"
 
+#include "Audio/cocotone_HostSyncAudioSourcePlayer.h"
+
 //==============================================================================
 #include "Engine/cocotone_VoicevoxEngine.cpp"
 #include "Engine/cocotone_TaskDetails.cpp"
@@ -19,3 +21,5 @@
 
 #include "Static/cocotone_StaticMoraMapping.cpp"
 #include "Static/cocotone_StaticPhonemes.cpp"
+
+#include "Audio/cocotone_HostSyncAudioSourcePlayer.cpp"

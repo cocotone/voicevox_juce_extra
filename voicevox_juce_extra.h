@@ -34,3 +34,5 @@
 //==============================================================================
 
 #include "Engine/cocotone_VoicevoxEngine.h"
+
+#include "Audio/cocotone_HostSyncAudioSourcePlayer.h"
