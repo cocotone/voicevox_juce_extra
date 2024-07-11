@@ -40,11 +40,45 @@ void HostSyncAudioSourcePlayer::processBlockWithPositionInfo(juce::AudioBuffer<f
 
         if (current_position_in_sampled != estimatedNextReadSamplePosition)
         {
-            memoryAudioSourceResampled->setNextReadPosition(current_position_in_sampled);
-        }
+            // Apply cross fade.
+            juce::AudioBuffer<float> audio_buffer_fadeout;
+            juce::AudioBuffer<float> audio_buffer_fadein;
 
-        juce::AudioSourceChannelInfo audio_source_retriever(audioBuffer);
-        memoryAudioSourceResampled->getNextAudioBlock(audio_source_retriever);
+            {
+                audio_buffer_fadeout.setSize(audioBuffer.getNumChannels(), audioBuffer.getNumSamples());
+                audio_buffer_fadeout.clear();
+
+                juce::AudioSourceChannelInfo scoped_channel_info(audio_buffer_fadeout);
+                memoryAudioSourceResampled->getNextAudioBlock(scoped_channel_info);
+
+                audio_buffer_fadeout.applyGainRamp(0, audio_buffer_fadeout.getNumSamples(), 1.0f, 0.0f);
+            }
+
+            memoryAudioSourceResampled->setNextReadPosition(current_position_in_sampled);
+
+            {
+                audio_buffer_fadein.setSize(audioBuffer.getNumChannels(), audioBuffer.getNumSamples());
+                audio_buffer_fadein.clear();
+
+                juce::AudioSourceChannelInfo scoped_channel_info(audio_buffer_fadein);
+                memoryAudioSourceResampled->getNextAudioBlock(scoped_channel_info);
+
+                audio_buffer_fadein.applyGainRamp(0, audio_buffer_fadein.getNumSamples(), 0.0f, 1.0f);
+            }
+
+            audioBuffer.clear();
+
+            for (int ch_idx = 0; ch_idx < audioBuffer.getNumChannels(); ch_idx++)
+            {
+                audioBuffer.addFrom(ch_idx, 0, audio_buffer_fadeout, ch_idx, 0, audio_buffer_fadeout.getNumSamples());
+                audioBuffer.addFrom(ch_idx, 0, audio_buffer_fadein, ch_idx, 0, audio_buffer_fadein.getNumSamples());
+            }
+        }
+        else
+        {
+            juce::AudioSourceChannelInfo audio_source_retriever(audioBuffer);
+            memoryAudioSourceResampled->getNextAudioBlock(audio_source_retriever);
+        }
 
         estimatedNextReadSamplePosition = memoryAudioSourceResampled->getNextReadPosition();
     }
