@@ -61,8 +61,11 @@ juce::ThreadPoolJob::JobStatus VoicevoxEngineTask::runJob()
                 }
             }
 
-            const auto low_level_score = cctn::ScoreJsonConverter::convertToLowLevelScore(*clientPtr.lock().get(), request.scoreJson);
-            sf_decode_source = cctn::ScoreJsonConverter::convertToSfDecodeSource(low_level_score.value());
+            const auto low_level_score_optional = cctn::ScoreJsonConverter::convertToLowLevelScore(*clientPtr.lock().get(), request.scoreJson);
+            if (low_level_score_optional.has_value())
+            {
+                sf_decode_source = cctn::ScoreJsonConverter::convertToSfDecodeSource(low_level_score_optional.value());
+            }
 
             sample_rate_request = clientPtr.lock()->getSampleRate();
         }
