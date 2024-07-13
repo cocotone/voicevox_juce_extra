@@ -5,7 +5,10 @@ namespace cctn
 
 //==============================================================================
 HostSyncAudioSourcePlayer::HostSyncAudioSourcePlayer()
-    : sampleRateToPlay(0)
+    : memoryAudioSourceOriginal(nullptr)
+    , memoryAudioSourceResampled(nullptr)
+    , estimatedNextReadSamplePosition(0)
+    , sampleRateToPlay(0)
 {
 }
 
@@ -30,6 +33,11 @@ void HostSyncAudioSourcePlayer::processBlockWithPositionInfo(juce::AudioBuffer<f
 {
     const juce::SpinLock::ScopedTryLockType lock(mutex);
     if (!lock.isLocked())
+    {
+        return;
+    }
+
+    if(memoryAudioSourceResampled.get() == nullptr)
     {
         return;
     }
