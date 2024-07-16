@@ -16,7 +16,7 @@
   license:            BSD 3-Clause License
   minimumCppStandard: 17
 
-  dependencies:       juce_core juce_audio_basics juce_gui_basics voicevox_juce
+  dependencies:       juce_core juce_audio_basics juce_audio_utils juce_gui_basics voicevox_juce
 
  END_JUCE_MODULE_DECLARATION
 
@@ -28,6 +28,7 @@
 
 #include <juce_core/juce_core.h>
 #include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <voicevox_juce/voicevox_juce.h>
 

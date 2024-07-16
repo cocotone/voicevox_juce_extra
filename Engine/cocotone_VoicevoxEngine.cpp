@@ -65,7 +65,11 @@ std::map<juce::String, juce::uint32> VoicevoxEngine::getSpeakerIdentifierToSpeak
 
                 juce::String item_text = model_name + " - " + style_name;
 
-                if (style_type == "frame_decode")
+                if (style_type == "sing")
+                {
+                    item_text = item_text + " - " + "Sing";
+                }
+                else if (style_type == "frame_decode")
                 {
                     item_text = item_text + " - " + "Humming";
                 }
@@ -74,11 +78,7 @@ std::map<juce::String, juce::uint32> VoicevoxEngine::getSpeakerIdentifierToSpeak
                     item_text = item_text + " - " + "Talk";
                 }
 
-                // NOTE: Only support talk model.
-                //if (style_id < 3000)
-                {
-                    result[item_text] = style_id;
-                }
+                result[item_text] = style_id;
             }
         }
     }
@@ -106,7 +106,11 @@ juce::StringArray VoicevoxEngine::getTalkSpeakerIdentifierList() const
 
                 juce::String item_text = model_name + " - " + style_name;
 
-                if (style_type == "frame_decode")
+                if (style_type == "sing")
+                {
+                    item_text = item_text + " - " + "Sing";
+                }
+                else if (style_type == "frame_decode")
                 {
                     item_text = item_text + " - " + "Humming";
                 }
@@ -147,7 +151,11 @@ juce::StringArray VoicevoxEngine::getHummingSpeakerIdentifierList() const
 
                 juce::String item_text = model_name + " - " + style_name;
 
-                if (style_type == "frame_decode")
+                if (style_type == "sing")
+                {
+                    item_text = item_text + " - " + "Sing";
+                }
+                else if (style_type == "frame_decode")
                 {
                     item_text = item_text + " - " + "Humming";
                 }
@@ -156,7 +164,7 @@ juce::StringArray VoicevoxEngine::getHummingSpeakerIdentifierList() const
                     item_text = item_text + " - " + "Talk";
                 }
 
-                // NOTE: Only support humming model.
+                // NOTE: Only support sing and humming model.
                 if (style_id >= 3000)
                 {
                     result.add(item_text);
